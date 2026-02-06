@@ -141,32 +141,40 @@ export default function DashboardPage() {
 
   if (authLoading || loading) {
     return (
-      <div className="min-h-screen bg-blue-50 flex items-center justify-center">
+      <div className="app-shell flex items-center justify-center">
         <div className="text-center">
-          <p className="text-gray-600">Laster inn...</p>
+          <p className="text-sm text-[#6b6660]">Laster inn...</p>
         </div>
       </div>
     )
   }
 
   return (
-    <div className="min-h-screen bg-blue-50 pb-20">
+    <div className="app-shell pb-20 relative overflow-hidden">
+      <div className="pointer-events-none absolute -top-32 right-[-20%] h-72 w-72 rounded-full bg-[radial-gradient(circle_at_center,rgba(255,192,70,0.55),transparent_60%)] blur-3xl" />
+      <div className="pointer-events-none absolute bottom-0 left-[-10%] h-72 w-72 rounded-full bg-[radial-gradient(circle_at_center,rgba(49,195,164,0.5),transparent_60%)] blur-3xl" />
+
       {/* Header */}
-      <div className="bg-white shadow-sm sticky top-0 z-10">
-        <div className="max-w-2xl mx-auto px-4 py-4 flex items-center justify-between">
-          <h1 className="text-2xl font-bold text-blue-600">🥤 Brus Lager</h1>
+      <div className="sticky top-0 z-10 px-4 pt-4">
+        <div className="glass mx-auto max-w-2xl rounded-3xl px-4 py-3 flex items-center justify-between">
+          <div>
+            <p className="text-xs uppercase tracking-[0.2em] text-[#6b6660]">Lager</p>
+            <h1 className="text-2xl font-semibold tracking-tight text-[#1f1d1b]">
+              🥤 Brus Lager
+            </h1>
+          </div>
           <div className="flex gap-2">
             {isAdmin && (
               <Link
                 href="/admin"
-                className="px-3 py-2 bg-gray-200 hover:bg-gray-300 rounded-lg text-sm font-medium"
+                className="btn btn-neutral text-sm"
               >
                 Admin
               </Link>
             )}
             <button
               onClick={handleLogout}
-              className="px-3 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg text-sm font-medium"
+              className="btn btn-danger text-sm"
             >
               Logg ut
             </button>
@@ -174,42 +182,45 @@ export default function DashboardPage() {
         </div>
       </div>
 
-      <div className="max-w-2xl mx-auto p-4 pt-6 space-y-6">
+      <div className="relative mx-auto max-w-2xl p-4 pt-6 space-y-6">
         {/* Profit Summary */}
-        <div className="bg-white rounded-lg shadow-md p-6">
-          <p className="text-gray-600 text-sm mb-2">Total fortjeneste</p>
-          <h2 className="text-4xl font-bold text-green-600">
-            {totalProfit.toLocaleString('no-NO')} kr
-          </h2>
+        <div className="card p-6">
+          <p className="text-xs uppercase tracking-[0.2em] text-[#6b6660]">Total fortjeneste</p>
+          <div className="mt-3 flex items-end justify-between">
+            <h2 className="text-4xl font-semibold text-[#1f1d1b]">
+              {totalProfit.toLocaleString('no-NO')} kr
+            </h2>
+            <span className="pill">Live</span>
+          </div>
         </div>
 
         {/* Products */}
         <div className="space-y-3">
           {products.length === 0 ? (
-            <div className="bg-white rounded-lg shadow-md p-6 text-center text-gray-500">
+            <div className="card p-6 text-center text-sm text-[#6b6660]">
               Ingen produkter registrert. {isAdmin && 'Gå til Admin for å legge til.'}
             </div>
           ) : (
             products.map((product) => (
               <div
                 key={product.id}
-                className="bg-white rounded-lg shadow-md p-4 flex items-center justify-between gap-4"
+                className="card p-4 flex items-center justify-between gap-4"
               >
                 <div className="flex-1">
-                  <h3 className="font-bold text-lg">
-                    {product.name}
-                  </h3>
-                  <p className="text-sm text-gray-600">
-                    Lager: <span className="font-bold">{product.stock}</span>
-                  </p>
-                  <p className="text-xs text-gray-500">
-                    Salg: {product.sell_price} kr | Innkjøp: {product.buy_price} kr
+                  <div className="flex items-center gap-2">
+                    <h3 className="text-lg font-semibold text-[#1f1d1b]">
+                      {product.name}
+                    </h3>
+                    <span className="pill">Lager {product.stock}</span>
+                  </div>
+                  <p className="mt-1 text-xs text-[#6b6660]">
+                    Salg: {product.sell_price} kr · Innkjop: {product.buy_price} kr
                   </p>
                 </div>
                 <button
                   onClick={() => handleQuickSale(product)}
                   disabled={sellingStates[product.id] || product.stock === 0}
-                  className="px-6 py-3 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 text-white font-bold rounded-lg text-lg min-w-fit transition"
+                  className="btn btn-primary text-sm"
                 >
                   {sellingStates[product.id] ? '...' : '➖ Solgt 1'}
                 </button>

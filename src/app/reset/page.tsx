@@ -57,8 +57,8 @@ export default function ResetPage() {
 
   if (authLoading) {
     return (
-      <div className="min-h-screen bg-blue-50 flex items-center justify-center">
-        <p className="text-gray-600">Laster inn...</p>
+      <div className="app-shell flex items-center justify-center">
+        <p className="text-sm text-[#6b6660]">Laster inn...</p>
       </div>
     )
   }
@@ -69,13 +69,13 @@ export default function ResetPage() {
 
   if (!isAdmin) {
     return (
-      <div className="min-h-screen bg-blue-50 flex items-center justify-center p-4">
-        <div className="bg-white rounded-lg shadow-md p-6 max-w-md w-full text-center">
-          <h1 className="text-xl font-bold mb-2">Ingen tilgang</h1>
-          <p className="text-gray-600 mb-4">Denne siden er kun for admin.</p>
+      <div className="app-shell flex items-center justify-center p-4">
+        <div className="card p-6 max-w-md w-full text-center">
+          <h1 className="text-xl font-semibold mb-2 text-[#1f1d1b]">Ingen tilgang</h1>
+          <p className="text-sm text-[#6b6660] mb-4">Denne siden er kun for admin.</p>
           <Link
             href="/dashboard"
-            className="inline-block px-4 py-2 bg-blue-600 text-white rounded-lg"
+            className="btn btn-neutral"
           >
             Tilbake
           </Link>
@@ -87,15 +87,15 @@ export default function ResetPage() {
   const canReset = confirmText.trim().toLowerCase() === 'slett alt'
 
   return (
-    <div className="min-h-screen bg-red-50 p-4">
+    <div className="app-shell p-4">
       <div className="max-w-xl mx-auto mt-10">
-        <div className="bg-white rounded-lg shadow-md p-6">
-          <h1 className="text-2xl font-bold text-red-600 mb-2">⚠️ Reset</h1>
-          <p className="text-gray-700 mb-4">
+        <div className="card p-6">
+          <h1 className="text-2xl font-semibold text-[#c0392b] mb-2">⚠️ Reset</h1>
+          <p className="text-sm text-[#6b6660] mb-4">
             Dette sletter alle produkter, innkjop og salg. Dette kan ikke angres.
           </p>
 
-          <div className="bg-red-100 border border-red-300 text-red-700 px-4 py-3 rounded mb-4">
+          <div className="rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700 mb-4">
             Skriv <strong>SLETT ALT</strong> for a bekrefte.
           </div>
 
@@ -104,23 +104,23 @@ export default function ResetPage() {
             value={confirmText}
             onChange={(e) => setConfirmText(e.target.value)}
             placeholder="SLETT ALT"
-            className="w-full px-4 py-3 border border-gray-300 rounded-lg mb-4"
+            className="w-full rounded-2xl border border-[#e6ded8] bg-white/90 px-4 py-3 text-sm mb-4"
           />
 
           <button
             onClick={handleReset}
             disabled={!canReset || loading}
-            className="w-full bg-red-600 hover:bg-red-700 disabled:bg-gray-400 text-white font-bold py-3 rounded-lg"
+            className="btn btn-danger w-full text-sm"
           >
             {loading ? 'Sletter...' : 'Tilbakestill alt'}
           </button>
 
           {message && (
-            <div className="mt-4 text-sm text-gray-700">{message}</div>
+            <div className="mt-4 text-sm text-[#6b6660]">{message}</div>
           )}
 
           <div className="mt-4">
-            <Link href="/dashboard" className="text-sm text-blue-600">
+            <Link href="/dashboard" className="text-sm text-[#1f1d1b]">
               Tilbake til dashboard
             </Link>
           </div>

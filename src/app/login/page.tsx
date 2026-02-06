@@ -32,47 +32,52 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-blue-50 to-blue-100 flex flex-col items-center justify-center p-4">
+    <div className="app-shell flex items-center justify-center px-4 py-10">
       <div className="w-full max-w-md">
-        <div className="bg-white rounded-lg shadow-lg p-8">
-          <h1 className="text-3xl font-bold text-center mb-2 text-blue-600">
-            🥤 Brus Lager
-          </h1>
-          <p className="text-center text-gray-600 mb-8">
-            Lager- og salgsapp for idrettslaget
-          </p>
+        <div className="card relative overflow-hidden p-8">
+          <div className="pointer-events-none absolute -top-12 -right-16 h-40 w-40 rounded-full bg-[radial-gradient(circle_at_center,rgba(255,192,70,0.6),transparent_60%)] blur-2xl" />
+          <div className="pointer-events-none absolute -bottom-16 -left-10 h-40 w-40 rounded-full bg-[radial-gradient(circle_at_center,rgba(255,106,61,0.45),transparent_60%)] blur-2xl" />
 
-          <form onSubmit={handleLogin} className="space-y-4">
+          <div className="relative">
+            <h1 className="text-3xl font-semibold tracking-tight text-[#1f1d1b]">
+              🥤 Brus Lager
+            </h1>
+            <p className="mt-2 text-sm text-[#6b6660]">
+              Rask lager- og salgsapp for idrettslaget
+            </p>
+          </div>
+
+          <form onSubmit={handleLogin} className="mt-8 space-y-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-[#4c4742] mb-2">
                 Email
               </label>
               <input
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full rounded-2xl border border-[#e6ded8] bg-white/90 px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-[#ff6a3d]"
                 placeholder="din@email.com"
                 required
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-[#4c4742] mb-2">
                 Passord
               </label>
               <input
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full rounded-2xl border border-[#e6ded8] bg-white/90 px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-[#ff6a3d]"
                 placeholder="••••••••"
                 required
               />
             </div>
 
             {error && (
-              <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
+              <div className="rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
                 {error}
               </div>
             )}
@@ -80,7 +85,7 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 text-white font-bold py-3 rounded-lg transition"
+              className="btn btn-primary w-full text-base"
             >
               {loading ? 'Logger inn...' : 'Logg inn'}
             </button>

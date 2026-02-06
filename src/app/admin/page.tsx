@@ -194,56 +194,59 @@ export default function AdminPage() {
 
   if (authLoading || loading) {
     return (
-      <div className="min-h-screen bg-blue-50 flex items-center justify-center">
-        <p className="text-gray-600">Laster inn...</p>
+      <div className="app-shell flex items-center justify-center">
+        <p className="text-sm text-[#6b6660]">Laster inn...</p>
       </div>
     )
   }
 
   return (
-    <div className="min-h-screen bg-blue-50 pb-20">
+    <div className="app-shell pb-20">
       {/* Header */}
-      <div className="bg-white shadow-sm sticky top-0 z-10">
-        <div className="max-w-2xl mx-auto px-4 py-4 flex items-center justify-between">
-          <h1 className="text-2xl font-bold text-blue-600">⚙️ Admin</h1>
+      <div className="sticky top-0 z-10 px-4 pt-4">
+        <div className="glass mx-auto max-w-2xl rounded-3xl px-4 py-3 flex items-center justify-between">
+          <div>
+            <p className="text-xs uppercase tracking-[0.2em] text-[#6b6660]">Admin</p>
+            <h1 className="text-2xl font-semibold tracking-tight text-[#1f1d1b]">⚙️ Kontrollpanel</h1>
+          </div>
           <Link
             href="/dashboard"
-            className="px-3 py-2 bg-gray-200 hover:bg-gray-300 rounded-lg text-sm font-medium"
+            className="btn btn-neutral text-sm"
           >
             Tilbake
           </Link>
         </div>
       </div>
 
-      <div className="max-w-2xl mx-auto p-4 pt-6">
+      <div className="mx-auto max-w-2xl p-4 pt-6">
         {/* Tabs */}
-        <div className="flex gap-2 mb-6 bg-white rounded-lg shadow-sm p-2">
+        <div className="card mb-6 flex gap-2 p-2">
           <button
             onClick={() => setActiveTab('products')}
-            className={`flex-1 py-2 px-4 rounded text-sm font-medium transition ${
+            className={`tab-pill flex-1 text-sm transition ${
               activeTab === 'products'
-                ? 'bg-blue-600 text-white'
-                : 'text-gray-700 hover:bg-gray-100'
+                ? 'bg-[#1f1d1b] text-white'
+                : 'text-[#4c4742] hover:bg-[#f7efe7]'
             }`}
           >
             Produkter
           </button>
           <button
             onClick={() => setActiveTab('purchases')}
-            className={`flex-1 py-2 px-4 rounded text-sm font-medium transition ${
+            className={`tab-pill flex-1 text-sm transition ${
               activeTab === 'purchases'
-                ? 'bg-blue-600 text-white'
-                : 'text-gray-700 hover:bg-gray-100'
+                ? 'bg-[#1f1d1b] text-white'
+                : 'text-[#4c4742] hover:bg-[#f7efe7]'
             }`}
           >
             Innkjøp
           </button>
           <button
             onClick={() => setActiveTab('sales')}
-            className={`flex-1 py-2 px-4 rounded text-sm font-medium transition ${
+            className={`tab-pill flex-1 text-sm transition ${
               activeTab === 'sales'
-                ? 'bg-blue-600 text-white'
-                : 'text-gray-700 hover:bg-gray-100'
+                ? 'bg-[#1f1d1b] text-white'
+                : 'text-[#4c4742] hover:bg-[#f7efe7]'
             }`}
           >
             Salg
@@ -253,15 +256,15 @@ export default function AdminPage() {
         {/* Products Tab */}
         {activeTab === 'products' && (
           <div className="space-y-6">
-            <div className="bg-white rounded-lg shadow-md p-6">
-              <h2 className="text-xl font-bold mb-4">Legg til nytt produkt</h2>
+            <div className="card p-6">
+              <h2 className="text-xl font-semibold text-[#1f1d1b] mb-4">Legg til nytt produkt</h2>
               {formError && (
-                <div className="mb-4 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
+                <div className="mb-4 rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
                   {formError}
                 </div>
               )}
               {formSuccess && (
-                <div className="mb-4 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded">
+                <div className="mb-4 rounded-2xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-700">
                   {formSuccess}
                 </div>
               )}
@@ -271,7 +274,7 @@ export default function AdminPage() {
                   value={newProductName}
                   onChange={(e) => setNewProductName(e.target.value)}
                   placeholder="Produktnavn (f.eks. Cola)"
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full rounded-2xl border border-[#e6ded8] bg-white/90 px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-[#ff6a3d]"
                 />
                 <input
                   type="number"
@@ -279,7 +282,7 @@ export default function AdminPage() {
                   value={newProductBuyPrice}
                   onChange={(e) => setNewProductBuyPrice(e.target.value)}
                   placeholder="Innkjøpspris (kr)"
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full rounded-2xl border border-[#e6ded8] bg-white/90 px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-[#ff6a3d]"
                 />
                 <input
                   type="number"
@@ -287,38 +290,41 @@ export default function AdminPage() {
                   value={newProductSellPrice}
                   onChange={(e) => setNewProductSellPrice(e.target.value)}
                   placeholder="Salgspris (kr)"
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full rounded-2xl border border-[#e6ded8] bg-white/90 px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-[#ff6a3d]"
                 />
                 <input
                   type="number"
                   value={newProductStock}
                   onChange={(e) => setNewProductStock(e.target.value)}
                   placeholder="Startlager (frivillig)"
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full rounded-2xl border border-[#e6ded8] bg-white/90 px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-[#ff6a3d]"
                 />
                 <button
                   type="submit"
-                  className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-lg"
+                  className="btn btn-primary w-full text-sm"
                 >
                   Legg til produkt
                 </button>
               </form>
             </div>
 
-            <div className="bg-white rounded-lg shadow-md p-6">
-              <h2 className="text-xl font-bold mb-4">Aktive produkter</h2>
+            <div className="card p-6">
+              <h2 className="text-xl font-semibold text-[#1f1d1b] mb-4">Aktive produkter</h2>
               {products.length === 0 ? (
-                <p className="text-gray-500">Ingen produkter ennå</p>
+                <p className="text-sm text-[#6b6660]">Ingen produkter ennå</p>
               ) : (
                 <div className="space-y-3">
                   {products.map((product) => (
                     <div
                       key={product.id}
-                      className="border border-gray-200 rounded-lg p-4"
+                      className="rounded-2xl border border-[#efe6df] bg-[#fffaf4] p-4"
                     >
-                      <h3 className="font-bold text-lg">{product.name}</h3>
-                      <p className="text-sm text-gray-600">
-                        Innkjøp: {product.buy_price} kr | Salg: {product.sell_price} kr | Lager: {product.stock}
+                      <div className="flex items-center justify-between">
+                        <h3 className="font-semibold text-[#1f1d1b]">{product.name}</h3>
+                        <span className="pill">Lager {product.stock}</span>
+                      </div>
+                      <p className="mt-1 text-xs text-[#6b6660]">
+                        Innkjøp: {product.buy_price} kr · Salg: {product.sell_price} kr
                       </p>
                     </div>
                   ))}
@@ -331,15 +337,15 @@ export default function AdminPage() {
         {/* Purchases Tab */}
         {activeTab === 'purchases' && (
           <div className="space-y-6">
-            <div className="bg-white rounded-lg shadow-md p-6">
-              <h2 className="text-xl font-bold mb-4">Registrer innkjøp</h2>
+            <div className="card p-6">
+              <h2 className="text-xl font-semibold text-[#1f1d1b] mb-4">Registrer innkjøp</h2>
               {formError && (
-                <div className="mb-4 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
+                <div className="mb-4 rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
                   {formError}
                 </div>
               )}
               {formSuccess && (
-                <div className="mb-4 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded">
+                <div className="mb-4 rounded-2xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-700">
                   {formSuccess}
                 </div>
               )}
@@ -347,7 +353,7 @@ export default function AdminPage() {
                 <select
                   value={purchaseProductId}
                   onChange={(e) => setPurchaseProductId(e.target.value)}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full rounded-2xl border border-[#e6ded8] bg-white/90 px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-[#ff6a3d]"
                 >
                   <option value="">Velg produkt</option>
                   {products.map((p) => (
@@ -361,7 +367,7 @@ export default function AdminPage() {
                   value={purchaseQuantity}
                   onChange={(e) => setPurchaseQuantity(e.target.value)}
                   placeholder="Antall"
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full rounded-2xl border border-[#e6ded8] bg-white/90 px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-[#ff6a3d]"
                 />
                 <input
                   type="number"
@@ -369,11 +375,11 @@ export default function AdminPage() {
                   value={purchasePricePerUnit}
                   onChange={(e) => setPurchasePricePerUnit(e.target.value)}
                   placeholder="Pris per enhet (kr)"
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full rounded-2xl border border-[#e6ded8] bg-white/90 px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-[#ff6a3d]"
                 />
                 <button
                   type="submit"
-                  className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-lg"
+                  className="btn btn-primary w-full text-sm"
                 >
                   Registrer innkjøp
                 </button>
@@ -384,24 +390,24 @@ export default function AdminPage() {
 
         {/* Sales Tab */}
         {activeTab === 'sales' && (
-          <div className="bg-white rounded-lg shadow-md p-6">
-            <h2 className="text-xl font-bold mb-4">Salgslogg</h2>
+          <div className="card p-6">
+            <h2 className="text-xl font-semibold text-[#1f1d1b] mb-4">Salgslogg</h2>
             {sales.length === 0 ? (
-              <p className="text-gray-500">Ingen salg registrert ennå</p>
+              <p className="text-sm text-[#6b6660]">Ingen salg registrert ennå</p>
             ) : (
               <div className="space-y-3 max-h-96 overflow-y-auto">
                 {sales.map((sale) => (
                   <div
                     key={sale.id}
-                    className="border border-gray-200 rounded-lg p-3"
+                    className="rounded-2xl border border-[#efe6df] bg-white/80 p-3"
                   >
-                    <p className="font-bold">
+                    <p className="font-semibold text-[#1f1d1b]">
                       {sale.product_name} x{sale.quantity}
                     </p>
-                    <p className="text-sm text-gray-600">
+                    <p className="text-xs text-[#6b6660]">
                       Fortjeneste: {sale.profit.toLocaleString('no-NO')} kr
                     </p>
-                    <p className="text-xs text-gray-400">
+                    <p className="text-xs text-[#9c948c]">
                       {new Date(sale.created_at).toLocaleString('no-NO')}
                     </p>
                   </div>
