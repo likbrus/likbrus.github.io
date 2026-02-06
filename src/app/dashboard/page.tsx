@@ -23,6 +23,17 @@ export default function DashboardPage() {
   const [undoStates, setUndoStates] = useState<Record<string, boolean>>({})
   const [loading, setLoading] = useState(true)
 
+  const getVippsLink = (productName: string) => {
+    const normalized = productName.toLowerCase()
+    if (normalized.includes('powerade')) {
+      return 'https://qr.vipps.no/box/12cbaac3-15ea-4153-aa87-b76bd50c3b5c/pay-in'
+    }
+    if (normalized.includes('monster')) {
+      return 'https://qr.vipps.no/box/a2c1d7e5-5235-471e-ba59-73f2b3887ae6/pay-in'
+    }
+    return 'https://qr.vipps.no/box/9179765e-b80c-4869-9d40-90a22e0561d5/pay-in'
+  }
+
   useEffect(() => {
     if (authLoading) return
 
@@ -264,10 +275,16 @@ export default function DashboardPage() {
                     </h3>
                     <span className="pill">Lager {product.stock}</span>
                   </div>
-                  <p className="mt-1 text-xs text-[#6b6660]">
-                    Salg: {product.sell_price} kr
-                    {isAdmin && ` · Innkjop: ${product.buy_price} kr`}
-                  </p>
+                  {user ? (
+                    <p className="mt-1 text-xs text-[#6b6660]">
+                      Salg: {product.sell_price} kr
+                      {isAdmin && ` · Innkjop: ${product.buy_price} kr`}
+                    </p>
+                  ) : (
+                    <p className="mt-2 text-3xl font-semibold text-[#1f1d1b]">
+                      {product.sell_price} kr
+                    </p>
+                  )}
                 </div>
                 {isAdmin ? (
                   <div className="flex items-center gap-2">
@@ -288,14 +305,19 @@ export default function DashboardPage() {
                     </button>
                   </div>
                 ) : !user ? (
-                  <a
-                    href="https://qr.vipps.no/box/731e3d45-7ca0-4a27-8372-f7ea48036ff1/pay-in"
-                    className="btn btn-primary text-sm"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    Kjop
-                  </a>
+                  <div className="flex flex-col items-end gap-2">
+                    <a
+                      href={getVippsLink(product.name)}
+                      className="btn btn-primary text-sm"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      Kjop
+                    </a>
+                    <span className="text-[11px] text-[#6b6660] text-right">
+                      Skriv inn hvilken brus du kjoper i Vipps.
+                    </span>
+                  </div>
                 ) : (
                   <span className="pill">Kun admin</span>
                 )}
