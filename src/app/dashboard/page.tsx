@@ -287,6 +287,15 @@ export default function DashboardPage() {
                       {sellingStates[product.id] ? '...' : '➖ Solgt 1'}
                     </button>
                   </div>
+                ) : !user ? (
+                  <a
+                    href="https://qr.vipps.no/box/731e3d45-7ca0-4a27-8372-f7ea48036ff1/pay-in"
+                    className="btn btn-primary text-sm"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    Kjop
+                  </a>
                 ) : (
                   <span className="pill">Kun admin</span>
                 )}
