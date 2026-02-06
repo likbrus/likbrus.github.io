@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { useAuth } from '@/context/AuthContext'
@@ -47,6 +47,23 @@ export default function AdminPage() {
   const [formError, setFormError] = useState('')
   const [formSuccess, setFormSuccess] = useState('')
   const [deleteStates, setDeleteStates] = useState<Record<string, boolean>>({})
+
+  const topSellers = useMemo(() => {
+    const totals = new Map<string, { name: string; quantity: number }>()
+
+    sales.forEach((sale) => {
+      const name = sale.product_name || 'Ukjent'
+      const current = totals.get(sale.product_id)
+      totals.set(sale.product_id, {
+        name,
+        quantity: (current?.quantity || 0) + sale.quantity,
+      })
+    })
+
+    return Array.from(totals.values())
+      .sort((a, b) => b.quantity - a.quantity)
+      .slice(0, 10)
+  }, [sales])
 
   useEffect(() => {
     if (!authLoading && (!user || !isAdmin)) {
@@ -425,30 +442,54 @@ export default function AdminPage() {
 
         {/* Sales Tab */}
         {activeTab === 'sales' && (
-          <div className="card p-6">
-            <h2 className="text-xl font-semibold text-[#1f1d1b] mb-4">Salgslogg</h2>
-            {sales.length === 0 ? (
-              <p className="text-sm text-[#6b6660]">Ingen salg registrert ennå</p>
-            ) : (
-              <div className="space-y-3 max-h-96 overflow-y-auto">
-                {sales.map((sale) => (
-                  <div
-                    key={sale.id}
-                    className="rounded-2xl border border-[#efe6df] bg-white/80 p-3"
-                  >
-                    <p className="font-semibold text-[#1f1d1b]">
-                      {sale.product_name} x{sale.quantity}
-                    </p>
-                    <p className="text-xs text-[#6b6660]">
-                      Fortjeneste: {sale.profit.toLocaleString('no-NO')} kr
-                    </p>
-                    <p className="text-xs text-[#9c948c]">
-                      {new Date(sale.created_at).toLocaleString('no-NO')}
-                    </p>
-                  </div>
-                ))}
-              </div>
-            )}
+          <div className="space-y-6">
+            <div className="card p-6">
+              <h2 className="text-xl font-semibold text-[#1f1d1b] mb-4">Mest solgte produkter</h2>
+              {topSellers.length === 0 ? (
+                <p className="text-sm text-[#6b6660]">Ingen salg registrert ennå</p>
+              ) : (
+                <div className="space-y-3">
+                  {topSellers.map((item, index) => (
+                    <div
+                      key={`${item.name}-${index}`}
+                      className="rounded-2xl border border-[#efe6df] bg-white/80 p-3 flex items-center justify-between"
+                    >
+                      <div className="flex items-center gap-3">
+                        <span className="pill">#{index + 1}</span>
+                        <p className="font-semibold text-[#1f1d1b]">{item.name}</p>
+                      </div>
+                      <span className="text-sm font-semibold text-[#1f1d1b]">{item.quantity} stk</span>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            <div className="card p-6">
+              <h2 className="text-xl font-semibold text-[#1f1d1b] mb-4">Salgslogg</h2>
+              {sales.length === 0 ? (
+                <p className="text-sm text-[#6b6660]">Ingen salg registrert ennå</p>
+              ) : (
+                <div className="space-y-3 max-h-96 overflow-y-auto">
+                  {sales.map((sale) => (
+                    <div
+                      key={sale.id}
+                      className="rounded-2xl border border-[#efe6df] bg-white/80 p-3"
+                    >
+                      <p className="font-semibold text-[#1f1d1b]">
+                        {sale.product_name} x{sale.quantity}
+                      </p>
+                      <p className="text-xs text-[#6b6660]">
+                        Fortjeneste: {sale.profit.toLocaleString('no-NO')} kr
+                      </p>
+                      <p className="text-xs text-[#9c948c]">
+                        {new Date(sale.created_at).toLocaleString('no-NO')}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
           </div>
         )}
       </div>
