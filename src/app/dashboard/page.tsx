@@ -23,12 +23,6 @@ export default function DashboardPage() {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    if (!authLoading && !user) {
-      router.push('/login')
-    }
-  }, [user, authLoading, router])
-
-  useEffect(() => {
     if (user) {
       fetchData()
       // Set up real-time subscriptions using the newer API
@@ -95,6 +89,7 @@ export default function DashboardPage() {
   }
 
   const handleQuickSale = async (product: Product) => {
+    if (!isAdmin) return
     setSellingStates((prev) => ({ ...prev, [product.id]: true }))
 
     try {
@@ -164,6 +159,14 @@ export default function DashboardPage() {
             </h1>
           </div>
           <div className="flex gap-2">
+            {!user && (
+              <Link
+                href="/login"
+                className="btn btn-neutral text-sm"
+              >
+                Admin login
+              </Link>
+            )}
             {isAdmin && (
               <Link
                 href="/admin"
@@ -172,12 +175,14 @@ export default function DashboardPage() {
                 Admin
               </Link>
             )}
-            <button
-              onClick={handleLogout}
-              className="btn btn-danger text-sm"
-            >
-              Logg ut
-            </button>
+            {user && (
+              <button
+                onClick={handleLogout}
+                className="btn btn-danger text-sm"
+              >
+                Logg ut
+              </button>
+            )}
           </div>
         </div>
       </div>
@@ -214,16 +219,21 @@ export default function DashboardPage() {
                     <span className="pill">Lager {product.stock}</span>
                   </div>
                   <p className="mt-1 text-xs text-[#6b6660]">
-                    Salg: {product.sell_price} kr · Innkjop: {product.buy_price} kr
+                    Salg: {product.sell_price} kr
+                    {isAdmin && ` · Innkjop: ${product.buy_price} kr`}
                   </p>
                 </div>
-                <button
-                  onClick={() => handleQuickSale(product)}
-                  disabled={sellingStates[product.id] || product.stock === 0}
-                  className="btn btn-primary text-sm"
-                >
-                  {sellingStates[product.id] ? '...' : '➖ Solgt 1'}
-                </button>
+                {isAdmin ? (
+                  <button
+                    onClick={() => handleQuickSale(product)}
+                    disabled={sellingStates[product.id] || product.stock === 0}
+                    className="btn btn-primary text-sm"
+                  >
+                    {sellingStates[product.id] ? '...' : '➖ Solgt 1'}
+                  </button>
+                ) : (
+                  <span className="pill">Kun admin</span>
+                )}
               </div>
             ))
           )}
