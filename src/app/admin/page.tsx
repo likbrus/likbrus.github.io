@@ -46,6 +46,7 @@ export default function AdminPage() {
 
   const [formError, setFormError] = useState('')
   const [formSuccess, setFormSuccess] = useState('')
+  const [deleteStates, setDeleteStates] = useState<Record<string, boolean>>({})
 
   useEffect(() => {
     if (!authLoading && (!user || !isAdmin)) {
@@ -192,6 +193,30 @@ export default function AdminPage() {
     }
   }
 
+  const handleDeleteProduct = async (productId: string, productName: string) => {
+    if (!confirm(`Slette ${productName} og all historikk?`)) return
+
+    setDeleteStates((prev) => ({ ...prev, [productId]: true }))
+    setFormError('')
+    setFormSuccess('')
+
+    try {
+      const { error } = await supabase
+        .from('products')
+        .delete()
+        .eq('id', productId)
+
+      if (error) throw error
+
+      setFormSuccess('Produkt slettet.')
+      await fetchProducts()
+    } catch (error) {
+      setFormError(error instanceof Error ? error.message : 'Feil oppstod')
+    } finally {
+      setDeleteStates((prev) => ({ ...prev, [productId]: false }))
+    }
+  }
+
   if (authLoading || loading) {
     return (
       <div className="app-shell flex items-center justify-center">
@@ -326,6 +351,16 @@ export default function AdminPage() {
                       <p className="mt-1 text-xs text-[#6b6660]">
                         Innkjøp: {product.buy_price} kr · Salg: {product.sell_price} kr
                       </p>
+                      <div className="mt-3 flex justify-end">
+                        <button
+                          type="button"
+                          onClick={() => handleDeleteProduct(product.id, product.name)}
+                          disabled={deleteStates[product.id]}
+                          className="btn btn-danger text-xs"
+                        >
+                          {deleteStates[product.id] ? 'Sletter...' : 'Slett produkt'}
+                        </button>
+                      </div>
                     </div>
                   ))}
                 </div>
