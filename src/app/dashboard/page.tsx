@@ -316,7 +316,7 @@ export default function DashboardPage() {
                     </a>
                     {!product.name.toLowerCase().includes('monster') &&
                       !product.name.toLowerCase().includes('powerade') && (
-                        <span className="text-sm font-semibold text-[#6b6660] text-right">
+                        <span className="text-base font-semibold text-[#3f3a35] text-right">
                           Skriv inn hvilken brus du kjoper i Vipps.
                         </span>
                       )}
