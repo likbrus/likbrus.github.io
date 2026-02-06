@@ -23,33 +23,33 @@ export default function DashboardPage() {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    if (user) {
-      fetchData()
-      // Set up real-time subscriptions using the newer API
-      const productsSubscription = supabase
-        .channel('products-changes')
-        .on(
-          'postgres_changes',
-          { event: '*', schema: 'public', table: 'products' },
-          () => fetchProducts()
-        )
-        .subscribe()
+    if (authLoading) return
 
-      const salesSubscription = supabase
-        .channel('sales-changes')
-        .on(
-          'postgres_changes',
-          { event: '*', schema: 'public', table: 'sales' },
-          () => fetchTotalProfit()
-        )
-        .subscribe()
+    fetchData()
+    // Set up real-time subscriptions using the newer API
+    const productsSubscription = supabase
+      .channel('products-changes')
+      .on(
+        'postgres_changes',
+        { event: '*', schema: 'public', table: 'products' },
+        () => fetchProducts()
+      )
+      .subscribe()
 
-      return () => {
-        productsSubscription.unsubscribe()
-        salesSubscription.unsubscribe()
-      }
+    const salesSubscription = supabase
+      .channel('sales-changes')
+      .on(
+        'postgres_changes',
+        { event: '*', schema: 'public', table: 'sales' },
+        () => fetchTotalProfit()
+      )
+      .subscribe()
+
+    return () => {
+      productsSubscription.unsubscribe()
+      salesSubscription.unsubscribe()
     }
-  }, [user])
+  }, [authLoading])
 
   const fetchData = async () => {
     try {
@@ -189,15 +189,17 @@ export default function DashboardPage() {
 
       <div className="relative mx-auto max-w-2xl p-4 pt-6 space-y-6">
         {/* Profit Summary */}
-        <div className="card p-6">
-          <p className="text-xs uppercase tracking-[0.2em] text-[#6b6660]">Total fortjeneste</p>
-          <div className="mt-3 flex items-end justify-between">
-            <h2 className="text-4xl font-semibold text-[#1f1d1b]">
-              {totalProfit.toLocaleString('no-NO')} kr
-            </h2>
-            <span className="pill">Live</span>
+        {isAdmin && (
+          <div className="card p-6">
+            <p className="text-xs uppercase tracking-[0.2em] text-[#6b6660]">Total fortjeneste</p>
+            <div className="mt-3 flex items-end justify-between">
+              <h2 className="text-4xl font-semibold text-[#1f1d1b]">
+                {totalProfit.toLocaleString('no-NO')} kr
+              </h2>
+              <span className="pill">Live</span>
+            </div>
           </div>
-        </div>
+        )}
 
         {/* Products */}
         <div className="space-y-3">
