@@ -20,6 +20,7 @@ export default function DashboardPage() {
   const [products, setProducts] = useState<Product[]>([])
   const [totalProfit, setTotalProfit] = useState(0)
   const [sellingStates, setSellingStates] = useState<Record<string, boolean>>({})
+  const [undoStates, setUndoStates] = useState<Record<string, boolean>>({})
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
@@ -129,6 +130,49 @@ export default function DashboardPage() {
     }
   }
 
+  const handleUndoSale = async (product: Product) => {
+    if (!isAdmin) return
+    setUndoStates((prev) => ({ ...prev, [product.id]: true }))
+
+    try {
+      const { data: lastSale, error: saleFetchError } = await supabase
+        .from('sales')
+        .select('id, profit')
+        .eq('product_id', product.id)
+        .order('created_at', { ascending: false })
+        .limit(1)
+        .maybeSingle()
+
+      if (saleFetchError) throw saleFetchError
+      if (!lastSale) return
+
+      const { error: deleteError } = await supabase
+        .from('sales')
+        .delete()
+        .eq('id', lastSale.id)
+
+      if (deleteError) throw deleteError
+
+      const { error: updateError } = await supabase
+        .from('products')
+        .update({ stock: product.stock + 1 })
+        .eq('id', product.id)
+
+      if (updateError) throw updateError
+
+      setProducts((prev) =>
+        prev.map((p) =>
+          p.id === product.id ? { ...p, stock: p.stock + 1 } : p
+        )
+      )
+      setTotalProfit((prev) => prev - (lastSale.profit || 0))
+    } catch (error) {
+      console.error('Error undoing sale:', error)
+    } finally {
+      setUndoStates((prev) => ({ ...prev, [product.id]: false }))
+    }
+  }
+
   const handleLogout = async () => {
     await supabase.auth.signOut()
     router.push('/login')
@@ -226,13 +270,23 @@ export default function DashboardPage() {
                   </p>
                 </div>
                 {isAdmin ? (
-                  <button
-                    onClick={() => handleQuickSale(product)}
-                    disabled={sellingStates[product.id] || product.stock === 0}
-                    className="btn btn-primary text-sm"
-                  >
-                    {sellingStates[product.id] ? '...' : '➖ Solgt 1'}
-                  </button>
+                  <div className="flex items-center gap-2">
+                    <button
+                      onClick={() => handleUndoSale(product)}
+                      disabled={undoStates[product.id]}
+                      className="btn btn-neutral text-sm"
+                      title="Angre siste salg"
+                    >
+                      {undoStates[product.id] ? '...' : '↩ -1'}
+                    </button>
+                    <button
+                      onClick={() => handleQuickSale(product)}
+                      disabled={sellingStates[product.id] || product.stock === 0}
+                      className="btn btn-primary text-sm"
+                    >
+                      {sellingStates[product.id] ? '...' : '➖ Solgt 1'}
+                    </button>
+                  </div>
                 ) : (
                   <span className="pill">Kun admin</span>
                 )}
