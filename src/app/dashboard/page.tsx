@@ -314,9 +314,12 @@ export default function DashboardPage() {
                     >
                       Kjop
                     </a>
-                    <span className="text-[11px] text-[#6b6660] text-right">
-                      Skriv inn hvilken brus du kjoper i Vipps.
-                    </span>
+                    {!product.name.toLowerCase().includes('monster') &&
+                      !product.name.toLowerCase().includes('powerade') && (
+                        <span className="text-sm font-semibold text-[#6b6660] text-right">
+                          Skriv inn hvilken brus du kjoper i Vipps.
+                        </span>
+                      )}
                   </div>
                 ) : (
                   <span className="pill">Kun admin</span>
